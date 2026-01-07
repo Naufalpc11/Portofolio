@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, viewport } from '../motion'
 
-export default function SkillsSection() {
+export default function SkillsSection({ animKey }) {
   return (
     <>
       <motion.section
         id="keahlian"
         className="section skills"
+        key={`skills-${animKey}`}
         initial="hidden"
         whileInView="show"
         viewport={viewport}

@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, viewport } from '../motion'
 
-export default function ContactSection() {
+export default function ContactSection({ animKey }) {
   return (
     <>
       <motion.section
         id="kontak"
         className="section contact"
+        key={`contact-${animKey}`}
         initial="hidden"
         whileInView="show"
         viewport={viewport}
@@ -57,7 +58,7 @@ export default function ContactSection() {
               </motion.a>
             </motion.article>
 
-            <motion.article className="contact-card outline" variants={stagger}>
+            <motion.article className="contact-card" variants={stagger}>
               <motion.div className="card-icon" aria-hidden="true" variants={fadeUp}>
                 <svg viewBox="0 0 24 24" fill="none">
                   <rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
@@ -154,11 +155,7 @@ export default function ContactSection() {
           border: 1px solid var(--color-border);
           padding: 28px;
           box-shadow: var(--shadow-card);
-        }
-
-        .contact-card.outline {
-          background: transparent;
-          border-color: var(--color-outline);
+          transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
         }
 
         .contact-card h3 {
@@ -169,6 +166,12 @@ export default function ContactSection() {
         .contact-card p {
           color: var(--color-muted);
           margin-bottom: 18px;
+        }
+
+        .contact-card:hover {
+          transform: translateY(-4px);
+          background: var(--color-surface-soft);
+          box-shadow: var(--shadow-soft);
         }
 
         .contact .card-icon {
@@ -189,21 +192,26 @@ export default function ContactSection() {
         .social {
           text-align: center;
           margin-bottom: 50px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
         }
 
         .social h3 {
           font-size: 28px;
-          margin-bottom: 8px;
+          margin: 0;
         }
 
         .social p {
           color: var(--color-muted);
-          margin-bottom: 26px;
+          margin-bottom: 18px;
         }
 
         .social-grid {
+          width: 100%;
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: 20px;
         }
 
@@ -213,16 +221,22 @@ export default function ContactSection() {
           border: 1px solid var(--color-border);
           padding: 24px 18px;
           box-shadow: var(--shadow-card);
+          text-align: center;
+          display: grid;
+          justify-items: center;
+          gap: 8px;
+          min-height: 170px;
         }
 
         .social-card h4 {
-          margin-top: 12px;
+          margin: 0;
           font-size: 16px;
         }
 
         .social-card span {
           color: var(--color-muted);
           font-size: 13px;
+          word-break: break-word;
         }
 
         .social .card-icon {

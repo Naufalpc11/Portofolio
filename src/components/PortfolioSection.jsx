@@ -59,7 +59,7 @@ const portfolioItems = [
   },
 ]
 
-export default function PortfolioSection() {
+export default function PortfolioSection({ animKey }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const total = portfolioItems.length
 
@@ -85,6 +85,7 @@ export default function PortfolioSection() {
       <motion.section
         id="portofolio"
         className="section portfolio"
+        key={`portfolio-${animKey}`}
         initial="hidden"
         whileInView="show"
         viewport={viewport}

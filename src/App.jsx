@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import SiteHeader from './components/SiteHeader.jsx'
 import HeroSection from './components/HeroSection.jsx'
 import AboutSection from './components/AboutSection.jsx'
@@ -7,20 +8,47 @@ import PortfolioSection from './components/PortfolioSection.jsx'
 import ContactSection from './components/ContactSection.jsx'
 import SiteFooter from './components/SiteFooter.jsx'
 
+const getInitialTheme = () => {
+  if (typeof window === 'undefined') return 'light'
+  const saved = window.localStorage.getItem('theme')
+  if (saved === 'light' || saved === 'dark') return saved
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
 export default function App() {
+  const [theme, setTheme] = useState(getInitialTheme)
+  const [animKey, setAnimKey] = useState(0)
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    window.localStorage.setItem('theme', theme)
+  }, [theme])
+
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+  }, [])
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+    setAnimKey((prev) => prev + 1)
+  }
+
   return (
     <>
       <div className="page">
-        <SiteHeader />
+        <SiteHeader theme={theme} onToggleTheme={handleToggleTheme} />
         <main>
-          <HeroSection />
-          <AboutSection />
-          <SkillsSection />
-          <ExperienceSection />
-          <PortfolioSection />
-          <ContactSection />
+          <HeroSection animKey={animKey} />
+          <AboutSection animKey={animKey} />
+          <SkillsSection animKey={animKey} />
+          <ExperienceSection animKey={animKey} />
+          <PortfolioSection animKey={animKey} />
+          <ContactSection animKey={animKey} />
         </main>
-        <SiteFooter />
+        <SiteFooter animKey={animKey} />
       </div>
       <style>{`
         #app {
@@ -172,6 +200,18 @@ export default function App() {
           font-size: 12px;
           font-weight: 600;
           color: var(--color-ink-soft);
+        }
+
+        @media (max-width: 768px) {
+          .section {
+            padding: 90px 0;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .container {
+            width: min(100% - 24px, var(--container));
+          }
         }
       `}</style>
     </>

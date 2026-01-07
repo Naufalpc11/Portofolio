@@ -1,10 +1,16 @@
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, viewport } from '../motion'
 
-export default function SiteFooter() {
+export default function SiteFooter({ animKey }) {
   return (
     <>
-      <motion.footer className="footer" initial="hidden" whileInView="show" viewport={viewport}>
+      <motion.footer
+        className="footer"
+        key={`footer-${animKey}`}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewport}
+      >
         <div className="container">
           <motion.div className="footer-grid" variants={stagger}>
             <motion.div className="footer-brand" variants={fadeUp}>

@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, viewport } from '../motion'
 
-export default function AboutSection() {
+export default function AboutSection({ animKey }) {
   return (
     <>
       <motion.section
         id="tentang"
         className="section about"
+        key={`about-${animKey}`}
         initial="hidden"
         whileInView="show"
         viewport={viewport}

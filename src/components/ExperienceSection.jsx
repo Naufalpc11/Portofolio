@@ -1,203 +1,186 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { fadeUp, stagger, viewport } from '../motion'
+import { fadeUp, stagger } from '../motion'
 
-export default function ExperienceSection() {
+const timelineItems = [
+  {
+    range: '2024 - Sekarang',
+    index: '01',
+    role: 'Senior Full-Stack Developer',
+    company: 'TechCorp Indonesia',
+    city: 'Jakarta',
+    description: 'Memimpin tim development untuk membangun platform SaaS yang melayani 100K+ users.',
+    tags: ['React', 'Node.js', 'AWS', 'PostgreSQL'],
+  },
+  {
+    range: '2022 - 2024',
+    index: '02',
+    role: 'Full-Stack Developer',
+    company: 'Digital Innovations',
+    city: 'Bandung',
+    description: 'Mengembangkan web applications untuk klien enterprise dengan microservices architecture.',
+    tags: ['Next.js', 'Python', 'Docker', 'MongoDB'],
+  },
+  {
+    range: '2021 - 2022',
+    index: '03',
+    role: 'Frontend Developer',
+    company: 'Creative Studios',
+    city: 'Jakarta',
+    description: 'Membuat interactive websites dengan fokus pada user experience dan modern design.',
+    tags: ['React', 'TypeScript', 'Tailwind CSS'],
+  },
+  {
+    range: '2020 - 2021',
+    index: '04',
+    role: 'UI/UX Designer',
+    company: 'StartUp Labs',
+    city: 'Surabaya',
+    description: 'Merancang user interface untuk mobile dan web platforms dengan pendekatan design thinking.',
+    tags: ['Figma', 'Adobe XD', 'Prototyping'],
+  },
+]
+
+export default function ExperienceSection({ animKey }) {
   const sectionRef = useRef(null)
-  const timelineRef = useRef(null)
+  const [revealCount, setRevealCount] = useState(0)
 
   useEffect(() => {
     const section = sectionRef.current
-    const timeline = timelineRef.current
-    if (!section || !timeline) return
+    if (!section) return undefined
 
-    const onWheel = (event) => {
-      if (!section.contains(event.target)) return
-      const delta = event.deltaY
-      if (delta === 0) return
+    let ticking = false
 
-      const maxScroll = timeline.scrollWidth - timeline.clientWidth
-      const atStart = timeline.scrollLeft <= 0
-      const atEnd = timeline.scrollLeft >= maxScroll - 1
+    const updateReveal = () => {
+      const rect = section.getBoundingClientRect()
+      const totalScroll = section.offsetHeight - window.innerHeight
 
-      if ((delta > 0 && !atEnd) || (delta < 0 && !atStart)) {
-        event.preventDefault()
-        timeline.scrollLeft += delta
+      if (totalScroll <= 0) {
+        setRevealCount(timelineItems.length)
+        return
       }
+
+      const scrolled = Math.min(Math.max(0, -rect.top), totalScroll)
+      const progress = scrolled / totalScroll
+      const nextCount = Math.min(timelineItems.length, Math.floor(progress * (timelineItems.length + 1)))
+      setRevealCount(nextCount)
     }
 
-    // Convert vertical wheel to horizontal scroll while the timeline can move.
-    section.addEventListener('wheel', onWheel, { passive: false })
-    return () => section.removeEventListener('wheel', onWheel)
-  }, [])
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      window.requestAnimationFrame(() => {
+        updateReveal()
+        ticking = false
+      })
+    }
+
+    updateReveal()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [animKey])
 
   return (
     <>
-      <motion.section
+      <section
         id="pengalaman"
         className="section experience"
+        key={`experience-${animKey}`}
         ref={sectionRef}
-        initial="hidden"
-        whileInView="show"
-        viewport={viewport}
+        style={{ '--journey-steps': timelineItems.length }}
       >
-        <div className="container">
-          <motion.div className="section-title" variants={stagger}>
-            <motion.span className="eyebrow" variants={fadeUp}>
-              Journey
-            </motion.span>
-            <motion.h2 variants={fadeUp}>
-              Perjalanan <span className="title-italic">Karir</span>
-            </motion.h2>
-            <motion.p variants={fadeUp}>
-              Dari junior developer hingga senior, setiap step adalah pembelajaran berharga
-            </motion.p>
-          </motion.div>
+        <div className="journey-pin">
+          <div className="container">
+            <motion.div className="section-title" variants={stagger}>
+              <motion.span className="eyebrow" variants={fadeUp}>
+                Journey
+              </motion.span>
+              <motion.h2 variants={fadeUp}>
+                Perjalanan <span className="title-italic">Karir</span>
+              </motion.h2>
+              <motion.p variants={fadeUp}>
+                Dari junior developer hingga senior, setiap step adalah pembelajaran berharga
+              </motion.p>
+            </motion.div>
+
+            <div className="timeline-grid">
+              {timelineItems.map((item, index) => (
+                <article
+                  key={item.index}
+                  className={`timeline-card ${index < revealCount ? 'is-revealed' : ''}`}
+                  style={{ transitionDelay: `${index * 0.08}s` }}
+                >
+                  <div className="timeline-meta">
+                    <span className="pill pill-outline">
+                      <span className="pill-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                          <path d="M8 4v4M16 4v4" stroke="currentColor" strokeWidth="1.5" />
+                        </svg>
+                      </span>
+                      {item.range}
+                    </span>
+                    <span className="timeline-index">{item.index}</span>
+                  </div>
+                  <h3>{item.role}</h3>
+                  <div className="timeline-details">
+                    <span>{item.company}</span>
+                    <span>{item.city}</span>
+                  </div>
+                  <p>{item.description}</p>
+                  <div className="chip-row left">
+                    {item.tags.map((tag) => (
+                      <span key={tag} className="chip">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <motion.div className="scroll-hint" variants={fadeUp}>
+              Scroll ke bawah untuk melihat perjalanan lengkap &rarr;
+            </motion.div>
+          </div>
         </div>
-
-        <motion.div className="timeline-scroll" ref={timelineRef} variants={stagger}>
-          <motion.article className="timeline-card" variants={fadeUp}>
-            <div className="timeline-meta">
-              <span className="pill pill-outline">
-                <span className="pill-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M8 4v4M16 4v4" stroke="currentColor" strokeWidth="1.5" />
-                  </svg>
-                </span>
-                2024 - Sekarang
-              </span>
-              <span className="timeline-index">01</span>
-            </div>
-            <h3>Senior Full-Stack Developer</h3>
-            <div className="timeline-details">
-              <span>TechCorp Indonesia</span>
-              <span>Jakarta</span>
-            </div>
-            <p>Memimpin tim development untuk membangun platform SaaS yang melayani 100K+ users.</p>
-            <motion.div className="chip-row left" variants={stagger}>
-              {['React', 'Node.js', 'AWS', 'PostgreSQL'].map((item) => (
-                <motion.span key={item} className="chip" variants={fadeUp}>
-                  {item}
-                </motion.span>
-              ))}
-            </motion.div>
-          </motion.article>
-
-          <motion.article className="timeline-card" variants={fadeUp}>
-            <div className="timeline-meta">
-              <span className="pill pill-outline">
-                <span className="pill-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M8 4v4M16 4v4" stroke="currentColor" strokeWidth="1.5" />
-                  </svg>
-                </span>
-                2022 - 2024
-              </span>
-              <span className="timeline-index">02</span>
-            </div>
-            <h3>Full-Stack Developer</h3>
-            <div className="timeline-details">
-              <span>Digital Innovations</span>
-              <span>Bandung</span>
-            </div>
-            <p>Mengembangkan web applications untuk klien enterprise dengan microservices architecture.</p>
-            <motion.div className="chip-row left" variants={stagger}>
-              {['Next.js', 'Python', 'Docker', 'MongoDB'].map((item) => (
-                <motion.span key={item} className="chip" variants={fadeUp}>
-                  {item}
-                </motion.span>
-              ))}
-            </motion.div>
-          </motion.article>
-
-          <motion.article className="timeline-card" variants={fadeUp}>
-            <div className="timeline-meta">
-              <span className="pill pill-outline">
-                <span className="pill-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M8 4v4M16 4v4" stroke="currentColor" strokeWidth="1.5" />
-                  </svg>
-                </span>
-                2021 - 2022
-              </span>
-              <span className="timeline-index">03</span>
-            </div>
-            <h3>Frontend Developer</h3>
-            <div className="timeline-details">
-              <span>Creative Studios</span>
-              <span>Jakarta</span>
-            </div>
-            <p>Membuat interactive websites dengan fokus pada user experience dan modern design.</p>
-            <motion.div className="chip-row left" variants={stagger}>
-              {['React', 'TypeScript', 'Tailwind CSS'].map((item) => (
-                <motion.span key={item} className="chip" variants={fadeUp}>
-                  {item}
-                </motion.span>
-              ))}
-            </motion.div>
-          </motion.article>
-
-          <motion.article className="timeline-card" variants={fadeUp}>
-            <div className="timeline-meta">
-              <span className="pill pill-outline">
-                <span className="pill-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M8 4v4M16 4v4" stroke="currentColor" strokeWidth="1.5" />
-                  </svg>
-                </span>
-                2020 - 2021
-              </span>
-              <span className="timeline-index">04</span>
-            </div>
-            <h3>UI/UX Designer</h3>
-            <div className="timeline-details">
-              <span>StartUp Labs</span>
-              <span>Surabaya</span>
-            </div>
-            <p>Merancang user interface untuk mobile dan web platforms dengan pendekatan design thinking.</p>
-            <motion.div className="chip-row left" variants={stagger}>
-              {['Figma', 'Adobe XD', 'Prototyping'].map((item) => (
-                <motion.span key={item} className="chip" variants={fadeUp}>
-                  {item}
-                </motion.span>
-              ))}
-            </motion.div>
-          </motion.article>
-        </motion.div>
-
-        <motion.div className="scroll-hint" variants={fadeUp}>
-          Scroll ke kanan untuk lihat lebih banyak &rarr;
-        </motion.div>
-      </motion.section>
+        <div className="journey-space" aria-hidden="true" />
+      </section>
       <style>{`
         .experience {
           padding-top: 80px;
           padding-bottom: 120px;
+          overflow: visible;
         }
 
-        .timeline-scroll {
+        .journey-pin {
+          position: sticky;
+          top: 120px;
+        }
+
+        .journey-space {
+          height: clamp(480px, calc(var(--journey-steps) * 40vh), 1400px);
+        }
+
+        .timeline-grid {
           position: relative;
           display: grid;
-          grid-auto-flow: column;
-          grid-auto-columns: minmax(280px, 1fr);
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 24px;
-          padding: 70px 20px 30px;
-          overflow-x: auto;
-          scroll-snap-type: x proximity;
-          scrollbar-width: thin;
-          scrollbar-color: var(--color-muted) transparent;
+          padding-top: 60px;
         }
 
-        .timeline-scroll::before {
+        .timeline-grid::before {
           content: '';
           position: absolute;
-          top: 40px;
-          left: 20px;
-          right: 20px;
+          top: 20px;
+          left: 0;
+          right: 0;
           height: 2px;
           background: var(--color-border);
         }
@@ -208,18 +191,26 @@ export default function ExperienceSection() {
           border: 1px solid var(--color-border);
           border-radius: 22px;
           padding: 22px;
-          min-width: 280px;
           box-shadow: var(--shadow-card);
-          scroll-snap-align: start;
+          opacity: 0;
+          transform: translateY(24px);
+          filter: blur(2px);
+          transition: opacity 0.45s ease, transform 0.45s ease, filter 0.45s ease;
+        }
+
+        .timeline-card.is-revealed {
+          opacity: 1;
+          transform: translateY(0);
+          filter: none;
         }
 
         .timeline-card::before {
           content: '';
           position: absolute;
-          top: -44px;
-          left: 32px;
-          width: 18px;
-          height: 18px;
+          top: -42px;
+          left: 28px;
+          width: 16px;
+          height: 16px;
           border-radius: 50%;
           background: var(--color-dark);
           box-shadow: 0 0 0 8px var(--color-surface-soft);
@@ -265,13 +256,30 @@ export default function ExperienceSection() {
           text-align: center;
           color: var(--color-muted);
           font-size: 14px;
-          margin-top: 10px;
+          margin-top: 24px;
+        }
+
+        @media (max-width: 1100px) {
+          .timeline-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .journey-space {
+            height: clamp(360px, calc(var(--journey-steps) * 26vh), 1000px);
+          }
         }
 
         @media (max-width: 768px) {
-          .timeline-scroll {
-            padding-left: 16px;
-            padding-right: 16px;
+          .journey-pin {
+            top: 100px;
+          }
+
+          .timeline-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .journey-space {
+            height: clamp(320px, calc(var(--journey-steps) * 22vh), 820px);
           }
         }
       `}</style>
