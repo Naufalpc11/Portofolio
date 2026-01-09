@@ -1,61 +1,86 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { fadeIn, fadeUp, stagger, viewport } from '../motion'
+import quizMasterImage from '../assets/Image/Project-card/Quiz-Master.png'
+import healthyLensImage from '../assets/Image/Project-card/Healthy Lens.png'
+import pharmacyImage from '../assets/Image/Project-card/Pharmacy Data Search Performance Comparison.png'
+import bowlingImage from '../assets/Image/Project-card/Simple Bowling Game Use python grafika komputer.png'
+import tiaranaImage from '../assets/Image/Project-card/Tiarana-pharmacy.png'
+import woodknotsImage from '../assets/Image/Project-card/Woodknots-detection.png'
+import textFinderImage from '../assets/Image/Project-card/Test-Finder Functional Programmng.png'
+import mazeRunnerImage from '../assets/Image/Project-card/Maze Runner Game.png'
 
 const portfolioItems = [
   {
-    category: 'Full-Stack Development',
-    title: 'E-Commerce Platform',
-    description: 'Platform e-commerce modern dengan real-time inventory, pembayaran, dan dashboard admin.',
-    tags: ['React', 'Node.js', 'PostgreSQL', 'Stripe'],
-    image: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?auto=format&fit=crop&w=1200&q=80',
-    alt: 'E-commerce platform',
-    github: 'https://github.com/johndoe/ecommerce-platform',
-  },
-  {
-    category: 'SaaS Product',
-    title: 'AI-Powered Analytics',
-    description: 'Dashboard analytics dengan machine learning untuk prediksi tren dan insight bisnis.',
-    tags: ['Next.js', 'Python', 'TensorFlow', 'MongoDB'],
-    image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=1200&q=80',
-    alt: 'AI analytics dashboard',
-    github: 'https://github.com/johndoe/ai-analytics',
+    category: 'Project Akademik',
+    title: 'Quiz Master',
+    description: 'Aplikasi kuis interaktif yang dibuat pada Semester 2.',
+    tags: ['Quiz', 'Semester 2', 'Academic'],
+    image: quizMasterImage,
+    alt: 'Tampilan Quiz Master',
+    github: 'https://github.com/Naufalpc11/Question-Master',
   },
   {
     category: 'UI/UX Design',
-    title: 'Design System',
-    description: 'Comprehensive design system dengan 100+ components dan dokumentasi.',
-    tags: ['Figma', 'React', 'Storybook', 'TypeScript'],
-    image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Design system',
-    github: 'https://github.com/johndoe/design-system',
+    title: 'UI/UX HealthyLens',
+    description: 'Studi UI/UX aplikasi HealthyLens pada Semester 4.',
+    tags: ['UI/UX', 'Prototype', 'Semester 4'],
+    image: healthyLensImage,
+    alt: 'UI/UX HealthyLens',
   },
   {
-    category: 'Mobile Development',
-    title: 'Mobile Banking App',
-    description: 'Aplikasi mobile banking dengan biometric authentication dan insights keuangan personal.',
-    tags: ['React Native', 'Firebase', 'Redux', 'Plaid API'],
-    image: 'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Mobile banking app',
-    github: 'https://github.com/johndoe/mobile-banking',
+    category: 'Data & Performance',
+    title: 'Pharmacy Data Search Performance Comparison',
+    description: 'Perbandingan performa pencarian data apotek pada Semester 4.',
+    tags: ['Search', 'Benchmark', 'Semester 4'],
+    image: pharmacyImage,
+    alt: 'Pharmacy data search performance comparison',
+    github: 'https://github.com/Naufalpc11/Pharmacy-Data-Search-Performance-Comparison',
   },
   {
-    category: 'Web Application',
-    title: 'Social Media Dashboard',
-    description: 'Unified dashboard untuk mengelola multiple social media accounts dan scheduling.',
-    tags: ['Vue.js', 'GraphQL', 'Redis', 'Bull Queue'],
-    image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Social media dashboard',
-    github: 'https://github.com/johndoe/social-dashboard',
+    category: 'Simulation',
+    title: 'Bowling Lane Physics Simulation',
+    description: 'Simulasi fisika lintasan bowling menggunakan Pygame.',
+    tags: ['Python', 'Pygame', 'Physics'],
+    image: bowlingImage,
+    alt: 'Bowling lane physics simulation',
+    github: 'https://github.com/Naufalpc11/ComputerGrapichs',
   },
   {
-    category: 'Health & Wellness',
-    title: 'Fitness Tracking Platform',
-    description: 'Platform fitness dengan workout tracking, nutrition planning, dan community features.',
-    tags: ['Next.js', 'Supabase', 'Stripe', 'Charts.js'],
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Fitness platform',
-    github: 'https://github.com/johndoe/fitness-platform',
+    category: 'Company Profile',
+    title: 'Company Profile Tiarana Farma',
+    description: 'Website company profile untuk Tiarana Farma pada Semester 5.',
+    tags: ['Company Profile', 'Web Design', 'Semester 5'],
+    image: tiaranaImage,
+    alt: 'Company profile Tiarana Farma',
+    github: 'https://github.com/Naufalpc11/TiaranaPharmacy',
+  },
+  {
+    category: 'Computer Vision',
+    title: 'Wood Knots Detection',
+    description: 'Deteksi wood knots pada citra kayu di Semester 5.',
+    tags: ['Computer Vision', 'Image Processing', 'Semester 5'],
+    image: woodknotsImage,
+    alt: 'Wood knots detection',
+    github: 'https://github.com/Naufalpc11/Wood-Classification',
+  },
+  {
+    category: 'Functional Programming',
+    title: 'Multiple Text-Finder',
+    description: 'Pencarian banyak teks menggunakan pendekatan functional programming.',
+    tags: ['Functional', 'Text Search', 'Algorithms'],
+    image: textFinderImage,
+    alt: 'Multiple text finder',
+    github: 'https://github.com/Naufalpc11/text-finder-with-rocket-and-vue',
+  },
+  {
+    category: 'AI Pathfinding',
+    title: 'Maze Runner AI',
+    description: 'Perbandingan pathfinding BFS vs UCS vs A pada maze runner.',
+    tags: ['BFS', 'UCS', 'A'],
+    image: mazeRunnerImage,
+    alt: 'Maze runner pathfinding',
+    github: 'https://github.com/Naufalpc11/Maze-Runner',
   },
 ]
 
@@ -112,17 +137,19 @@ export default function PortfolioSection({ animKey }) {
               >
                 <div className="portfolio-media">
                   <img src={item.image} alt={item.alt} loading="lazy" />
-                  <div className="portfolio-overlay">
-                    <a
-                      className="portfolio-link"
-                      href={item.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`Lihat repository GitHub untuk ${item.title}`}
-                    >
-                      Lihat di GitHub
-                    </a>
-                  </div>
+                  {item.github ? (
+                    <div className="portfolio-overlay">
+                      <a
+                        className="portfolio-link"
+                        href={item.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Lihat repository GitHub untuk ${item.title}`}
+                      >
+                        Lihat di GitHub
+                      </a>
+                    </div>
+                  ) : null}
                 </div>
                 <div className="portfolio-body">
                   <span className="eyebrow small">{item.category}</span>
