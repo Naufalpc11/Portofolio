@@ -300,6 +300,8 @@ export default function PortfolioSection({ animKey }) {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          position: relative;
+          z-index: 0;
           transition: transform 0.35s ease;
         }
 
@@ -309,6 +311,8 @@ export default function PortfolioSection({ animKey }) {
           inset: 0;
           background: var(--color-overlay);
           opacity: 0;
+          z-index: 1;
+          pointer-events: none;
           transition: opacity 0.3s ease;
         }
 
@@ -320,6 +324,7 @@ export default function PortfolioSection({ animKey }) {
           justify-content: center;
           opacity: 0;
           transform: translateY(8px);
+          z-index: 2;
           transition: opacity 0.3s ease, transform 0.3s ease;
           pointer-events: none;
         }
